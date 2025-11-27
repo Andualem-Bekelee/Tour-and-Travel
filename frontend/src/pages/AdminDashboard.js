@@ -92,10 +92,7 @@ function AdminDashboard({ language }) {
 
       {/* Add Buttons */}
       <div style={{ textAlign: "center", marginBottom: 30 }}>
-        <button
-          onClick={() => navigate("/addtour")}
-          style={buttonStyle}
-        >
+        <button onClick={() => navigate("/addtour")} style={buttonStyle}>
           {language === "en" ? "➕ Add Tour" : "➕ ጉብኝት ያክሉ"}
         </button>
         <button
@@ -108,7 +105,9 @@ function AdminDashboard({ language }) {
 
       {/* Tours Section */}
       <section style={{ marginBottom: 50 }}>
-        <h2 style={sectionTitleStyle}>{language === "en" ? "Available Tours" : "ያሉ ጉብኝቶች"}</h2>
+        <h2 style={sectionTitleStyle}>
+          {language === "en" ? "Available Tours" : "ያሉ ጉብኝቶች"}
+        </h2>
         {tours.length === 0 ? (
           <p style={{ color: "#555" }}>No tours found.</p>
         ) : (
@@ -139,64 +138,82 @@ function AdminDashboard({ language }) {
       </section>
 
       {/* Hotels Section */}
-<section style={{ marginBottom: 50 }}>
-  <h2 style={sectionTitleStyle}>
-    {language === "en" ? "Hotels" : "ሆቴሎች"}
-  </h2>
-  {hotels.length === 0 ? (
-    <p style={{ color: "#555" }}>No hotels found.</p>
-  ) : (
-    <div style={cardContainerStyle}>
-      {hotels.map((hotel) => (
-        <div key={hotel._id} style={cardStyle}>
-          <h3 style={cardTitleStyle}>{hotel.name}</h3>
-          <p style={cardDescStyle}>{hotel.description?.slice(0, 100)}...</p>
-          <p style={{ fontWeight: "bold", color: "#ff7f50" }}>{hotel.category}</p>
+      <section style={{ marginBottom: 50 }}>
+        <h2 style={sectionTitleStyle}>{language === "en" ? "Hotels" : "ሆቴሎች"}</h2>
+        {hotels.length === 0 ? (
+          <p style={{ color: "#555" }}>No hotels found.</p>
+        ) : (
+          <div style={cardContainerStyle}>
+            {hotels.map((hotel) => (
+              <div key={hotel._id} style={cardStyle}>
+                <h3 style={cardTitleStyle}>{hotel.name}</h3>
+                <p style={cardDescStyle}>{hotel.description?.slice(0, 100)}...</p>
+                <p style={{ fontWeight: "bold", color: "#ff7f50" }}>{hotel.category}</p>
 
-          {/* Mini Image Gallery */}
-          <div style={{ display: "flex", gap: 6, overflowX: "auto", paddingTop: 6, marginBottom: 8 }}>
-            {hotel.images && hotel.images.length > 0 ? (
-              hotel.images.map((img, i) => (
-                <img
-                  key={i}
-                  src={`http://localhost:5000${img}`}
-                  alt={hotel.name + " image " + (i+1)}
-                  style={{ width: 60, height: 60, borderRadius: 6, objectFit: "cover", flexShrink: 0 }}
-                />
-              ))
-            ) : (
-              <img
-                src="https://via.placeholder.com/60"
-                alt="No image"
-                style={{ width: 60, height: 60, borderRadius: 6, objectFit: "cover" }}
-              />
-            )}
+                {/* Mini Image Gallery */}
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 6,
+                    overflowX: "auto",
+                    paddingTop: 6,
+                    marginBottom: 8,
+                  }}
+                >
+                  {hotel.images && hotel.images.length > 0 ? (
+                    hotel.images.map((img, i) => (
+                      <img
+                        key={i}
+                        src={`http://localhost:5000${img}`}
+                        alt={`${hotel.name} ${i + 1}`} // ESLint-compliant
+                        style={{
+                          width: 60,
+                          height: 60,
+                          borderRadius: 6,
+                          objectFit: "cover",
+                          flexShrink: 0,
+                        }}
+                      />
+                    ))
+                  ) : (
+                    <img
+                      src="https://via.placeholder.com/60"
+                      alt={hotel.name} // ESLint-compliant
+                      style={{
+                        width: 60,
+                        height: 60,
+                        borderRadius: 6,
+                        objectFit: "cover",
+                      }}
+                    />
+                  )}
+                </div>
+
+                <div style={cardButtonContainerStyle}>
+                  <button
+                    onClick={() => navigate(`/admin/edithotel/${hotel._id}`)}
+                    style={editButtonStyle}
+                  >
+                    ✏️ Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteHotel(hotel._id)}
+                    style={deleteButtonStyle}
+                  >
+                    🗑️ Delete
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
-
-          <div style={cardButtonContainerStyle}>
-            <button
-              onClick={() => navigate(`/admin/edithotel/${hotel._id}`)}
-              style={editButtonStyle}
-            >
-              ✏️ Edit
-            </button>
-            <button
-              onClick={() => handleDeleteHotel(hotel._id)}
-              style={deleteButtonStyle}
-            >
-              🗑️ Delete
-            </button>
-          </div>
-        </div>
-      ))}
-    </div>
-  )}
-</section>
-
+        )}
+      </section>
 
       {/* Bookings Section */}
       <section style={{ marginBottom: 50 }}>
-        <h2 style={sectionTitleStyle}>{language === "en" ? "Bookings" : "ቦታ መያዣዎች"}</h2>
+        <h2 style={sectionTitleStyle}>
+          {language === "en" ? "Bookings" : "ቦታ መያዣዎች"}
+        </h2>
         {bookings.length === 0 ? (
           <p style={{ color: "#555" }}>No bookings yet.</p>
         ) : (

@@ -117,11 +117,47 @@ const Activities = ({ language }) => {
             <span className="hidden md:inline">| Contact: Addis Ababa</span>
           </div>
           <div className="flex gap-4 text-lg">
-            <a href="#" className="hover:text-orange-500"><i className="fab fa-facebook-f"></i></a>
-            <a href="#" className="hover:text-orange-500"><i className="fab fa-instagram"></i></a>
-            <a href="#" className="hover:text-orange-500"><i className="fab fa-telegram-plane"></i></a>
-            <a href="#" className="hover:text-orange-500"><i className="fab fa-youtube"></i></a>
-          </div>
+  <a
+    href="https://facebook.com"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Facebook"
+    className="hover:text-orange-500"
+  >
+    <i className="fab fa-facebook-f"></i>
+  </a>
+
+  <a
+    href="https://instagram.com"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Instagram"
+    className="hover:text-orange-500"
+  >
+    <i className="fab fa-instagram"></i>
+  </a>
+
+  <a
+    href="https://t.me"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Telegram"
+    className="hover:text-orange-500"
+  >
+    <i className="fab fa-telegram-plane"></i>
+  </a>
+
+  <a
+    href="https://youtube.com"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="YouTube"
+    className="hover:text-orange-500"
+  >
+    <i className="fab fa-youtube"></i>
+  </a>
+</div>
+
         </div>
 
         {/* Footer Columns */}
