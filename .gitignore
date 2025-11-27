@@ -1,0 +1,81 @@
+################################################################################
+# GLOBAL IGNORE (root)
+################################################################################
+
+# OS
+.DS_Store
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Diagnostic reports
+report.*.json
+
+# dotenv files
+.env
+.env.local
+.env.*.local
+
+# Temp directories
+.temp
+.tmp
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+################################################################################
+# BUILD OUTPUT
+################################################################################
+/dist
+/build
+/coverage
+/.nyc_output
+
+################################################################################
+# GENERATED
+################################################################################
+/generated/prisma
+/uploads
+
+################################################################################
+# FRONTEND
+################################################################################
+frontend/node_modules
+frontend/dist
+frontend/build
+
+################################################################################
+# BACKEND
+################################################################################
+backend/node_modules
+backend/dist
+backend/build
+backend/uploads
+
+
+node_modules
