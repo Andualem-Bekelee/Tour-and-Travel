@@ -1,22 +1,29 @@
-// src/components/TourCard.js
 import React from "react";
 
-const TourCard = ({ tour, onZoom }) => {
+const TourCard = ({ tour }) => {
+  let firstImage = "";
+
+  if (tour.photo) {
+    if (typeof tour.photo === "string") {
+      firstImage = tour.photo.split(",")[0]; // handle comma-separated images
+    } else if (Array.isArray(tour.photo) && tour.photo.length > 0) {
+      firstImage = tour.photo[0]; // handle array of images
+    }
+  }
+
+  const imageUrl = firstImage.startsWith("http")
+    ? firstImage
+    : `http://localhost:5000/uploads/${firstImage}`;
+
   return (
-    <div
-      className="w-64 bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer transform hover:scale-105 transition-transform duration-300"
-      onClick={() => onZoom(tour.image && tour.image[0] ? `http://localhost:5000${tour.image[0]}` : "https://via.placeholder.com/250")}
-    >
+    <div className="tour-card border p-4 rounded shadow hover:shadow-lg transition">
       <img
-        src={tour.image && tour.image.length > 0 ? `http://localhost:5000${tour.image[0]}` : "https://via.placeholder.com/250"}
+        src={imageUrl}
         alt={tour.title}
-        className="h-40 w-full object-cover"
+        className="w-full h-48 object-cover rounded mb-2"
       />
-      <div className="p-4 text-center">
-        <h3 className="text-lg font-bold text-gray-800">{tour.title}</h3>
-        <p className="text-gray-600 mt-1">{tour.destination}</p>
-        <p className="text-blue-600 font-semibold mt-2">${tour.price}</p>
-      </div>
+      <h2 className="font-bold text-lg">{tour.title}</h2>
+      <p className="text-gray-600">{tour.description}</p>
     </div>
   );
 };

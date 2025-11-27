@@ -1,10 +1,14 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
+// backend/models/User.js
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }
+  password: { type: String, required: true },
+  isAdmin: { type: Boolean, default: false },
+  resetToken: { type: String },
+  resetTokenExpire: { type: Date },
 });
 
 // Hash password before saving
@@ -14,9 +18,9 @@ userSchema.pre("save", async function(next) {
   next();
 });
 
-// Compare password method
+// Compare password
 userSchema.methods.matchPassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-module.exports = mongoose.model("User", userSchema);
+export default mongoose.model("User", userSchema);

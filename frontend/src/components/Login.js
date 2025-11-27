@@ -1,38 +1,103 @@
+// src/pages/Login.js
 import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 
-function Login({ onLoginSuccess, setView }) {
-  const [loginData, setLoginData] = useState({ email: "", password: "" });
+export default function Login({ onLogin, language }) {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  // Handle input changes
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value.trim() });
+  };
+
+  // Handle form submit
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Fake login
-    if (loginData.email === "admin@admin.com") {
-      onLoginSuccess({ name: "Admin User", email: loginData.email, role: "admin" });
-    } else {
-      onLoginSuccess({ name: "Demo User", email: loginData.email, role: "user" });
+    setError("");
+    setLoading(true);
+
+    try {
+      console.log("Submitting login with:", formData);
+
+      const res = await axios.post(
+        "http://localhost:5000/api/users/login",
+        formData
+      );
+
+      console.log("Backend response:", res.data);
+
+      const user = res.data;
+
+      // Save user to localStorage
+      localStorage.setItem("user", JSON.stringify(user));
+
+      // Callback to App.js
+      if (onLogin) onLogin(user);
+
+      alert(
+        language === "en"
+          ? "✅ Login successful!"
+          : "✅ ግባ ተሳክቷል!"
+      );
+
+      navigate(user.isAdmin ? "/admin" : "/");
+    } catch (err) {
+      console.error("AXIOS ERROR:", err.response?.data || err.message);
+
+      // Show backend message if exists
+      const msg = err.response?.data?.message || "❌ Login failed. Check credentials.";
+
+      setError(language === "en" ? msg : "❌ የግባ ሂደት አልተሳካም። መረጃ ያረጋግጡ።");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleLogin} style={{ marginBottom: 20 }}>
-      <h2>Login</h2>
-      <input
-        placeholder="Email"
-        value={loginData.email}
-        onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-      />
-      <input
-        placeholder="Password"
-        type="password"
-        value={loginData.password}
-        onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-      />
-      <button type="submit">Login</button>
-      <p onClick={() => setView("register")} style={{ cursor: "pointer", marginTop: 10 }}>
-        Register
+    <div style={{ maxWidth: 400, margin: "50px auto", padding: 20, border: "1px solid #ccc", borderRadius: 8 }}>
+      <h2 style={{ textAlign: "center" }}>{language === "en" ? "Login" : "ግባ"}</h2>
+
+      {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
+
+      <form onSubmit={handleSubmit}>
+        <label>Email:</label>
+        <input
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          style={{ width: "100%", padding: 10, marginBottom: 10, borderRadius: 6, border: "1px solid #ccc" }}
+        />
+
+        <label>Password:</label>
+        <input
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+          style={{ width: "100%", padding: 10, marginBottom: 10, borderRadius: 6, border: "1px solid #ccc" }}
+        />
+
+        <button
+          type="submit"
+          disabled={loading}
+          style={{ width: "100%", padding: 12, borderRadius: 6, background: "teal", color: "#fff", fontWeight: "bold", cursor: "pointer" }}
+        >
+          {loading ? (language === "en" ? "Logging in..." : "በመግባት...") : language === "en" ? "Login" : "ግባ"}
+        </button>
+      </form>
+
+      <p style={{ marginTop: 10, textAlign: "center" }}>
+        <Link to="/forgot-password" style={{ color: "teal", textDecoration: "underline" }}>
+          {language === "en" ? "Forgot Password?" : "የሚረሳ ፓስዎርድ?"}
+        </Link>
       </p>
-    </form>
+    </div>
   );
 }
-
-export default Login;

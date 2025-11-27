@@ -1,79 +1,83 @@
-const express = require("express");
-const router = express.Router();
-const Tour = require("../models/Tour");
-const multer = require("multer");
-const path = require("path");
+// backend/routes/tourRoutes.js
+import express from "express";
+import multer from "multer";
+import Tour from "../models/Tour.js";
 
-// Multer config for multiple images
+const router = express.Router();
+
+// Multer storage setup
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "uploads/"),
-  filename: (req, file, cb) =>
-    cb(null, Date.now() + "-" + file.originalname),
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
 });
+
 const upload = multer({ storage });
 
-// Get all tours
+// GET all tours
 router.get("/", async (req, res) => {
   try {
     const tours = await Tour.find();
     res.json(tours);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error(err);
+    res.status(500).json({ message: "Unable to fetch tours" });
   }
 });
 
-// Get single tour
+// GET single tour by id
 router.get("/:id", async (req, res) => {
   try {
     const tour = await Tour.findById(req.params.id);
     if (!tour) return res.status(404).json({ message: "Tour not found" });
     res.json(tour);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
-// Create tour (multiple images)
+// POST: Add new tour (multiple images)
 router.post("/", upload.array("images", 5), async (req, res) => {
   try {
-    const images = req.files ? req.files.map((file) => `/uploads/${file.filename}`) : [];
-    const tourData = {
-      ...req.body,
-      image: images, // save multiple images
-    };
-    const tour = await Tour.create(tourData);
+    const { title, description, price } = req.body;
+
+    // Save image file names
+    const imagePaths = req.files.map((file) => file.filename);
+
+    const tour = await Tour.create({
+      title,
+      description,
+      price,
+      images: imagePaths,
+    });
+
     res.status(201).json(tour);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error(err);
+    res.status(500).json({ message: "Failed to add tour" });
   }
 });
-
-// Update tour (multiple images)
-router.put("/:id", upload.array("images", 5), async (req, res) => {
+// SEARCH tours by destination or title
+router.get("/search/:keyword", async (req, res) => {
   try {
-    const images = req.files ? req.files.map((file) => `/uploads/${file.filename}`) : [];
-    const tourData = {
-      ...req.body,
-    };
-    if (images.length > 0) tourData.image = images;
+    const keyword = req.params.keyword;
 
-    const tour = await Tour.findByIdAndUpdate(req.params.id, tourData, { new: true });
-    if (!tour) return res.status(404).json({ message: "Tour not found" });
-    res.json(tour);
+    const tours = await Tour.find({
+      $or: [
+        { location: { $regex: keyword, $options: "i" } },
+        { title: { $regex: keyword, $options: "i" } }
+      ]
+    });
+
+    res.json(tours);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Search failed" });
   }
 });
 
-// Delete tour
-router.delete("/:id", async (req, res) => {
-  try {
-    const deleted = await Tour.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ message: "Tour not found" });
-    res.json({ message: "Tour deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
 
-module.exports = router;
+export default router;

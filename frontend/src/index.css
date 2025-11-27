@@ -1,19 +1,39 @@
+/* Tailwind Directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Styles */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
 }
 
+/* Form Inputs */
 input {
   display: block;
   margin: 5px 0;
   padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
+/* Buttons */
 button {
   padding: 8px 12px;
   margin-top: 5px;
   cursor: pointer;
+  border-radius: 6px;
+  background-color: #2563eb; /* Tailwind blue-600 */
+  color: white;
+  transition: background-color 0.3s;
 }
+
+button:hover {
+  background-color: #1d4ed8; /* Tailwind blue-700 */
+}
+
+/* Leaflet Map Container */
 .leaflet-container {
   height: 400px;
   width: 100%;

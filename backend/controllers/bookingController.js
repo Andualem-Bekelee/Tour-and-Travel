@@ -1,52 +1,95 @@
-const Booking = require("../models/booking");
-const Tour = require("../models/Tour");
+import Booking from "../models/Booking.js";
+import Tour from "../models/Tour.js";
 
-exports.createBooking = async (req, res) => {
+// -------------------
+// Create a new booking
+// -------------------
+export const createBooking = async (req, res) => {
   try {
-    const { tourId, date, numberOfPeople } = req.body;
+    const {
+      tourId,
+      userId,
+      name,
+      email,
+      phone,
+      arrivalDate,
+      nights,
+      adults,
+      children,
+      totalGuests,
+      totalPrice,
+      specialRequests,
+    } = req.body;
+
+    if (!userId) return res.status(400).json({ message: "User ID is required" });
 
     const tour = await Tour.findById(tourId);
     if (!tour) return res.status(404).json({ message: "Tour not found" });
 
-    const totalPrice = tour.price * numberOfPeople;
-
-    const booking = await Booking.create({
-      user: req.user._id,
-      tour: tourId,
-      date,
-      numberOfPeople,
+    const newBooking = new Booking({
+      tourId,
+      userId,
+      name,
+      email,
+      phone,
+      arrivalDate,
+      nights,
+      adults,
+      children,
+      totalGuests,
       totalPrice,
+      specialRequests,
     });
 
-    res.status(201).json(booking);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const savedBooking = await newBooking.save();
+    res.status(201).json(savedBooking);
+  } catch (err) {
+    console.error("Booking error:", err.message);
+    res.status(500).json({ message: "Booking failed", error: err.message });
   }
 };
 
-exports.getUserBookings = async (req, res) => {
+// -------------------
+// Get all bookings (admin)
+// -------------------
+export const getBookings = async (req, res) => {
   try {
-    const bookings = await Booking.find({ user: req.user._id }).populate("tour");
+    const bookings = await Booking.find()
+      .populate("tourId")
+      .populate("userId");
     res.json(bookings);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-exports.cancelBooking = async (req, res) => {
+// -------------------
+// Get bookings for a specific user
+// -------------------
+export const getUserBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find({ userId: req.params.userId })
+      .populate("tourId")
+      .populate("userId");
+    res.json(bookings);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// -------------------
+// Cancel a booking
+// -------------------
+export const cancelBooking = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);
-
     if (!booking) return res.status(404).json({ message: "Booking not found" });
-    if (booking.user.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: "Unauthorized" });
-    }
 
     booking.status = "cancelled";
     await booking.save();
 
     res.json({ message: "Booking cancelled successfully" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
-function EditTour({ language }) {
+function EditTour({ language = "en" }) {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -52,13 +52,9 @@ function EditTour({ language }) {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("title", tour.title);
-    formData.append("description", tour.description);
-    formData.append("price", tour.price);
-    formData.append("location", tour.location);
-    formData.append("duration", tour.duration);
-    formData.append("category", tour.category);
-
+    Object.entries(tour).forEach(([key, value]) =>
+      formData.append(key, value)
+    );
     newImages.forEach((img) => formData.append("images", img));
 
     try {
@@ -76,95 +72,46 @@ function EditTour({ language }) {
   return (
     <div
       style={{
-        padding: "30px",
-        background: "#f8f9fa",
         minHeight: "100vh",
+        backgroundImage: `url("/images/1762421067242-1762242446138-tour2.jpg")`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        padding: "40px 20px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
         fontFamily: "'Poppins', sans-serif",
       }}
     >
       <div
         style={{
-          maxWidth: 600,
-          margin: "0 auto",
-          background: "#fff",
+          width: "100%",
+          maxWidth: 700,
+          background: "rgba(255, 255, 255, 0.9)",
+          borderRadius: 16,
           padding: 30,
-          borderRadius: 12,
-          boxShadow: "0 8px 20px rgba(0,0,0,0.1)",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.3)",
+          backdropFilter: "blur(8px)",
         }}
       >
-        <h2 style={{ textAlign: "center", marginBottom: 25 }}>
+        <h2
+          style={{
+            textAlign: "center",
+            marginBottom: 25,
+            color: "#2c3e50",
+            fontWeight: "bold",
+          }}
+        >
           {language === "en" ? "✏️ Edit Tour" : "✏️ ጉብኝት ያስተካክሉ"}
         </h2>
 
         <form onSubmit={handleSubmit} encType="multipart/form-data">
-          <label style={labelStyle}>
-            {language === "en" ? "Title" : "ርዕስ"}
-          </label>
-          <input
-            type="text"
-            name="title"
-            value={tour.title}
-            onChange={handleChange}
-            style={inputStyle}
-            required
-          />
-
-          <label style={labelStyle}>
-            {language === "en" ? "Description" : "መግለጫ"}
-          </label>
-          <textarea
-            name="description"
-            value={tour.description}
-            onChange={handleChange}
-            rows="4"
-            style={{ ...inputStyle, resize: "none" }}
-            required
-          />
-
-          <label style={labelStyle}>
-            {language === "en" ? "Price ($)" : "ዋጋ ($)"}
-          </label>
-          <input
-            type="number"
-            name="price"
-            value={tour.price}
-            onChange={handleChange}
-            style={inputStyle}
-            required
-          />
-
-          <label style={labelStyle}>
-            {language === "en" ? "Location" : "ቦታ"}
-          </label>
-          <input
-            type="text"
-            name="location"
-            value={tour.location}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-
-          <label style={labelStyle}>
-            {language === "en" ? "Duration" : "ቆይታ"}
-          </label>
-          <input
-            type="text"
-            name="duration"
-            value={tour.duration}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-
-          <label style={labelStyle}>
-            {language === "en" ? "Category" : "መደብ"}
-          </label>
-          <input
-            type="text"
-            name="category"
-            value={tour.category}
-            onChange={handleChange}
-            style={inputStyle}
-          />
+          {renderInput("title", "Title", "ርዕስ", tour.title, handleChange)}
+          {renderTextarea("description", "Description", "መግለጫ", tour.description, handleChange)}
+          {renderInput("price", "Price ($)", "ዋጋ ($)", tour.price, handleChange, "number")}
+          {renderInput("location", "Location", "ቦታ", tour.location, handleChange)}
+          {renderInput("duration", "Duration", "ቆይታ", tour.duration, handleChange)}
+          {renderInput("category", "Category", "መደብ", tour.category, handleChange)}
 
           <label style={labelStyle}>
             {language === "en" ? "Existing Images" : "ነባር ምስሎች"}
@@ -177,11 +124,12 @@ function EditTour({ language }) {
                   src={`http://localhost:5000${img}`}
                   alt="tour"
                   style={{
-                    width: 80,
-                    height: 80,
+                    width: 90,
+                    height: 90,
                     objectFit: "cover",
-                    borderRadius: 8,
+                    borderRadius: 10,
                     border: "1px solid #ddd",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
                   }}
                 />
               ))
@@ -200,36 +148,14 @@ function EditTour({ language }) {
             style={inputStyle}
           />
 
-          <div style={{ textAlign: "center", marginTop: 20 }}>
-            <button
-              type="submit"
-              style={{
-                padding: "10px 25px",
-                background: "linear-gradient(135deg, #2980b9, #3498db)",
-                border: "none",
-                borderRadius: 8,
-                color: "#fff",
-                fontSize: 16,
-                fontWeight: "bold",
-                cursor: "pointer",
-              }}
-            >
+          <div style={{ textAlign: "center", marginTop: 25 }}>
+            <button type="submit" style={submitBtnStyle}>
               {language === "en" ? "Update Tour" : "ጉብኝት አዘምን"}
             </button>
-
             <button
               type="button"
               onClick={() => navigate("/admin")}
-              style={{
-                marginLeft: 10,
-                padding: "10px 25px",
-                background: "#7f8c8d",
-                border: "none",
-                borderRadius: 8,
-                color: "#fff",
-                fontSize: 16,
-                cursor: "pointer",
-              }}
+              style={cancelBtnStyle}
             >
               {language === "en" ? "Cancel" : "ሰርዝ"}
             </button>
@@ -240,14 +166,74 @@ function EditTour({ language }) {
   );
 }
 
-// ✅ Styles
-const labelStyle = { display: "block", marginBottom: 6, marginTop: 15, color: "#2c3e50", fontWeight: "bold" };
+// 🧩 Helper components
+const renderInput = (name, labelEn, labelAm, value, onChange, type = "text") => (
+  <div>
+    <label style={labelStyle}>{labelEn} / {labelAm}</label>
+    <input
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      style={inputStyle}
+      required
+    />
+  </div>
+);
+
+const renderTextarea = (name, labelEn, labelAm, value, onChange) => (
+  <div>
+    <label style={labelStyle}>{labelEn} / {labelAm}</label>
+    <textarea
+      name={name}
+      value={value}
+      onChange={onChange}
+      rows="4"
+      style={{ ...inputStyle, resize: "none" }}
+      required
+    />
+  </div>
+);
+
+const labelStyle = {
+  display: "block",
+  marginBottom: 6,
+  marginTop: 15,
+  color: "#2c3e50",
+  fontWeight: "bold",
+};
+
 const inputStyle = {
   width: "100%",
   padding: 10,
-  borderRadius: 6,
+  borderRadius: 8,
   border: "1px solid #ccc",
   fontSize: 14,
+  outline: "none",
+  boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+};
+
+const submitBtnStyle = {
+  padding: "10px 25px",
+  background: "linear-gradient(135deg, #27ae60, #2ecc71)",
+  border: "none",
+  borderRadius: 10,
+  color: "#fff",
+  fontSize: 16,
+  fontWeight: "bold",
+  cursor: "pointer",
+  marginRight: 10,
+  boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
+};
+
+const cancelBtnStyle = {
+  padding: "10px 25px",
+  background: "#7f8c8d",
+  border: "none",
+  borderRadius: 10,
+  color: "#fff",
+  fontSize: 16,
+  cursor: "pointer",
 };
 
 export default EditTour;

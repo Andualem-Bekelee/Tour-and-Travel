@@ -1,37 +1,59 @@
 // backend/routes/userRoutes.js
-const express = require("express");
+import express from "express";
+import bcrypt from "bcryptjs";
+import User from "../models/User.js";
+
 const router = express.Router();
-const User = require("../models/User");
-const bcrypt = require("bcryptjs");
 
-// Register a new user
-router.post("/register", async (req, res) => {
+// -----------------------------
+// User Login
+// -----------------------------
+router.post("/login", async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { email, password } = req.body;
 
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
+    const user = await User.findOne({ email });
+    if (!user)
+      return res.status(401).json({ message: "❌ Invalid credentials" });
 
-    // check if user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
-    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch)
+      return res.status(401).json({ message: "❌ Invalid credentials" });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = await User.create({
-      name,
-      email,
-      password: hashedPassword,
+    res.json({
+      message: "✅ Login successful",
+      userId: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
     });
-
-    res.status(201).json({ message: "User created successfully", user: newUser });
   } catch (err) {
-    console.error("Registration error:", err.message);
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-module.exports = router;
+// -----------------------------
+// Reset test user password (optional)
+// -----------------------------
+router.get("/reset-test-user", async (req, res) => {
+  try {
+    const password = "Test1234"; // login password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.findOneAndUpdate(
+      { email: "test@example.com" },
+      { password: hashedPassword },
+      { new: true }
+    );
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.json({ message: "✅ Test user password reset", user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+export default router;

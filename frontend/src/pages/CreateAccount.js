@@ -130,6 +130,7 @@ const CreateAccount = () => {
 const inputStyle = {
   width: "100%",
   padding: "10px",
+  color:'black',
   marginBottom: "15px",
   borderRadius: "8px",
   border: "none",

@@ -1,121 +1,78 @@
+// src/App.js
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Pages
 import Home from "./pages/Home";
+import AdminDashboard from "./pages/AdminDashboard";
+import Login from "./pages/Login";
+
+// Other pages...
 import Tours from "./pages/Tours";
 import BookingForm from "./pages/BookingForm";
-import AdminLogin from "./pages/AdminLogin";
-import Login from "./pages/Login";
 import CreateAccount from "./pages/CreateAccount";
-import AdminDashboard from "./pages/AdminDashboard";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import AddTour from "./pages/AddTour";
-import EditTour from "./pages/EditTour";
+import AddHotel from "./pages/AddHotel";
+import BookHotels from "./pages/BookHotels";
+import AdminDiscount from "./pages/AdminDiscount";
+import Destination from "./pages/Destination";
+import DestinationDetails from "./pages/DestinationDetails";
+import DestinationPage from "./pages/DestinationHome";
+import Activities from "./pages/Activities";
+import ContactSection from "./pages/ContactSection";
+import TourDetails from "./pages/TourDetails";
+import TourView from "./pages/TourView";
+import InfoDetail from "./pages/InfoDetail";
 
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+// Components
+import Navbar from "./components/Navbar";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("adminToken"));
-  const [language, setLanguage] = useState("en"); // "en" or "am"
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+  const [language, setLanguage] = useState("en");
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    localStorage.removeItem("adminToken");
+    setUser(null);
+    localStorage.removeItem("user");
     alert(language === "en" ? "✅ Logged out!" : "✅ ውጤት እንደገና ተጠፋ!");
   };
 
   const toggleLanguage = () => setLanguage(language === "en" ? "am" : "en");
 
-  const navStyle = {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    background: "rgba(0,0,0,0.7)",
-    padding: "10px 20px",
-    borderRadius: 8,
-    marginBottom: 20,
-    flexWrap: "wrap",
-  };
-  const navLinksStyle = { display: "flex", gap: 15, flexWrap: "wrap", alignItems: "center" };
-  const linkStyle = { color: "white", textDecoration: "none", fontWeight: "bold" };
-
   return (
     <Router>
-      <div style={{ fontFamily: "Arial, sans-serif" }}>
-        {/* Navigation */}
-        <nav style={navStyle}>
-          <h2 style={{ color: "white", margin: 0 }}>🌍 Tour & Travel</h2>
-          <div style={navLinksStyle}>
-            <Link to="/" style={linkStyle}>{language === "en" ? "Home" : "መነሻ"}</Link>
-            <Link to="/tours" style={linkStyle}>{language === "en" ? "Tours" : "ጉብኝቶች"}</Link>
+      <Navbar user={user} handleLogout={handleLogout} toggleLanguage={toggleLanguage} language={language} />
 
-            {isLoggedIn ? (
-              <>
-                <Link to="/admin" style={linkStyle}>{language === "en" ? "Admin Dashboard" : "አስተዳዳሪ ዳሽቦርድ"}</Link>
-                <button
-                  onClick={handleLogout}
-                  style={{ ...linkStyle, background: "transparent", border: "none", cursor: "pointer" }}
-                >
-                  {language === "en" ? "Logout" : "ውጣ"}
-                </button>
-              </>
-            ) : (
-              <>
-                <Link to="/login" style={linkStyle}>{language === "en" ? "Login" : "ግባ"}</Link>
-                <Link to="/createaccount" style={linkStyle}>{language === "en" ? "Create Account" : "መለያ ፍጠር"}</Link>
-              </>
-            )}
+      <Routes>
+        <Route path="/home" element={<Home language={language} />} />
+        <Route path="/login" element={<Login language={language} setUser={setUser} />} />
+        <Route path="/admin" element={<AdminDashboard onLogout={handleLogout} language={language} />} />
 
-            {/* Language toggle */}
-            <button
-              onClick={toggleLanguage}
-              style={{
-                marginLeft: 10,
-                padding: "5px 10px",
-                borderRadius: 5,
-                border: "none",
-                cursor: "pointer",
-                background: "teal",
-                color: "white",
-              }}
-            >
-              {language === "en" ? "AM" : "EN"}
-            </button>
-          </div>
-        </nav>
-
-        {/* Routes */}
-        <Routes>
-          <Route path="/" element={<Home language={language} />} />
-          <Route path="/tours" element={<Tours language={language} isAdmin={isLoggedIn} />} />
-          <Route path="/book/:id" element={<BookingForm language={language} />} />
-          <Route path="/adminlogin" element={<AdminLogin onLogin={setIsLoggedIn} language={language} />} />
-          <Route path="/login" element={<Login onLogin={setIsLoggedIn} language={language} />} />
-          <Route path="/createaccount" element={<CreateAccount language={language} />} />
-
-          {/* Admin Routes */}
-          <Route
-            path="/admin"
-            element={isLoggedIn ? <AdminDashboard language={language} /> : <AdminLogin onLogin={setIsLoggedIn} language={language} />}
-          />
-          <Route
-            path="/addtour"
-            element={isLoggedIn ? <AddTour language={language} /> : <AdminLogin onLogin={setIsLoggedIn} language={language} />}
-          />
-          <Route
-            path="/admin/edit/:id"
-            element={isLoggedIn ? <EditTour language={language} /> : <AdminLogin onLogin={setIsLoggedIn} language={language} />}
-          />
-        </Routes>
-
-        {/* Footer */}
-        <footer style={{ textAlign: "center", marginTop: 50, padding: 10, background: "#222", color: "#ccc", borderRadius: 8 }}>
-          <p>
-            © {new Date().getFullYear()} {language === "en" ? "Tour & Travel Platform. All rights reserved." : "ጉብኝት እና ትራቭል ፕላትፎርም። መብት ሁሉ የተጠበቀ ነው።"}
-          </p>
-        </footer>
-      </div>
+        {/* Add other routes here */}
+        <Route path="/tours" element={<Tours language={language} isAdmin={user?.isAdmin} />} />
+        <Route path="/book/:id" element={<BookingForm user={user} language={language} />} />
+        <Route path="/signup" element={<CreateAccount language={language} />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/addtour" element={<AddTour language={language} />} />
+        <Route path="/addhotel" element={<AddHotel language={language} />} />
+        <Route path="/admin/discount" element={<AdminDiscount />} />
+        <Route path="/bookhotels" element={<BookHotels language={language} />} />
+        <Route path="/destination" element={<Destination language={language} />} />
+        <Route path="/destination-details" element={<DestinationDetails />} />
+        <Route path="/destination/:id" element={<DestinationPage language={language} />} />
+        <Route path="/activities" element={<Activities language={language} />} />
+        <Route path="/contact" element={<ContactSection language={language} />} />
+        <Route path="/details/:field" element={<InfoDetail />} />
+        <Route path="/details" element={<InfoDetail />} />
+        <Route path="/tour/:id" element={<TourDetails />} />
+        <Route path="/tourview/:id" element={<TourView />} />
+      </Routes>
     </Router>
   );
 }
