@@ -2,21 +2,24 @@
 import React, { useEffect, useState } from "react";
 
 const ContactSection = ({ language = "en" }) => {
-  const [contact, setContact] = useState(null);
+  const [contact, setContact] = useState({
+    email: "",
+    phone: "",
+    address: "",
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Try to fetch dynamic contact; if 404 or error, fallback to defaults
     const fetchContact = async () => {
       try {
         const res = await fetch("http://localhost:5000/api/contact");
-        if (!res.ok) throw new Error("No contact API");
+        if (!res.ok) throw new Error("API not available");
         const data = await res.json();
         setContact(data);
-      } catch (err) {
+      } catch {
         setContact({
           email: "info@travelgo.com",
-          phone: "+251 913 943958",
+          phone: "+251 913 943 958",
           address: "Addis Ababa, Ethiopia",
         });
       } finally {
@@ -26,27 +29,81 @@ const ContactSection = ({ language = "en" }) => {
     fetchContact();
   }, []);
 
-  if (loading) return <div className="py-8 text-center">Loading contact...</div>;
+  const texts = {
+    title: language === "en" ? "Contact Us" : "አግኙን",
+    subtitle:
+      language === "en"
+        ? "We’d love to hear from you. Reach out anytime."
+        : "ሁልጊዜ ለመነጋገር ዝግጁ ነን።",
+    email: language === "en" ? "Email" : "ኢሜል",
+    phone: language === "en" ? "Phone" : "ስልክ",
+    address: language === "en" ? "Address" : "አድራሻ",
+  };
 
   return (
-    <section id="contact" className="max-w-6xl mx-auto my-12 px-4 py-8 bg-white/90 rounded-lg shadow">
-      <h2 className="text-2xl font-bold text-center mb-4">{language === "en" ? "Contact Us" : "አግኙን"}</h2>
-      <div className="flex flex-col md:flex-row gap-6 justify-center items-stretch">
-        <div className="flex-1 bg-gray-50 p-4 rounded shadow">
-          <p className="font-semibold">📧 {language === "en" ? "Email" : "ኢሜል"}</p>
-          <p className="text-gray-700">{contact.email}</p>
-        </div>
-        <div className="flex-1 bg-gray-50 p-4 rounded shadow">
-          <p className="font-semibold">📞 {language === "en" ? "Phone" : "ስልክ"}</p>
-          <p className="text-gray-700">{contact.phone}</p>
-        </div>
-        <div className="flex-1 bg-gray-50 p-4 rounded shadow">
-          <p className="font-semibold">📍 {language === "en" ? "Address" : "አድራሻ"}</p>
-          <p className="text-gray-700">{contact.address}</p>
-        </div>
+    <section
+      id="contact"
+      className="max-w-7xl mx-auto px-4 py-16"
+      aria-labelledby="contact-title"
+    >
+      {/* Header */}
+      <div className="text-center mb-12">
+        <h2
+          id="contact-title"
+          className="text-3xl md:text-4xl font-bold text-gray-900"
+        >
+          {texts.title}
+        </h2>
+        <p className="mt-3 text-gray-600 max-w-xl mx-auto">
+          {texts.subtitle}
+        </p>
       </div>
+
+      {/* Content */}
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="h-32 rounded-xl bg-gray-200 animate-pulse"
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <ContactCard
+            icon="📧"
+            label={texts.email}
+            value={contact.email}
+          />
+          <ContactCard
+            icon="📞"
+            label={texts.phone}
+            value={contact.phone}
+          />
+          <ContactCard
+            icon="📍"
+            label={texts.address}
+            value={contact.address}
+          />
+        </div>
+      )}
     </section>
   );
 };
+
+const ContactCard = ({ icon, label, value }) => (
+  <div className="group rounded-xl bg-white shadow-sm border border-gray-100 p-6 transition-all hover:shadow-md hover:-translate-y-1">
+    <div className="flex items-start gap-4">
+      <span className="text-3xl">{icon}</span>
+      <div>
+        <p className="text-sm text-gray-500 font-medium">{label}</p>
+        <p className="text-lg text-gray-800 font-semibold mt-1">
+          {value}
+        </p>
+      </div>
+    </div>
+  </div>
+);
 
 export default ContactSection;

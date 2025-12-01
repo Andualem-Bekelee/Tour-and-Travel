@@ -49,7 +49,8 @@ function App() {
       <Navbar user={user} handleLogout={handleLogout} toggleLanguage={toggleLanguage} language={language} />
 
       <Routes>
-        <Route path="/home" element={<Home language={language} />} />
+        <Route path="/" element={<Home language={language} />} />
+         <Route path="/home" element={<Home language={language} />} />
         <Route path="/login" element={<Login language={language} setUser={setUser} />} />
         <Route path="/admin" element={<AdminDashboard onLogout={handleLogout} language={language} />} />
 

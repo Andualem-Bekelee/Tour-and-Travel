@@ -1,38 +1,62 @@
-const User = require("../models/user");
-const jwt = require("jsonwebtoken");
+import User from "../models/User.js";
+import generateToken from "../utils/generateToken.js";
 
-// Generate JWT
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
-};
+// =======================
+// REGISTER (CREATE ACCOUNT)
+// =======================
+export const registerUser = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
 
-// Register user
-exports.registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
-  const userExists = await User.findOne({ email });
-  if (userExists) return res.status(400).json({ message: "User already exists" });
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
-  const user = await User.create({ name, email, password });
-  res.status(201).json({
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    token: generateToken(user._id),
-  });
-};
+    // Check if user exists
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return res.status(400).json({ message: "User already exists" });
+    }
 
-// Login user
-exports.loginUser = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (user && (await user.matchPassword(password))) {
-    res.json({
+    // Create user
+    const user = await User.create({
+      name,
+      email,
+      password,
+    });
+
+    res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
       token: generateToken(user._id),
     });
-  } else {
-    res.status(401).json({ message: "Invalid email or password" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Registration failed" });
+  }
+};
+
+// =======================
+// LOGIN
+// =======================
+export const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (user && (await user.matchPassword(password))) {
+      res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        token: generateToken(user._id),
+      });
+    } else {
+      res.status(401).json({ message: "Invalid email or password" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Login failed" });
   }
 };
