@@ -1,19 +1,26 @@
-// backend/routes/bookingRoutes.js
 import express from "express";
-import { createBooking, getBookings, getUserBookings, cancelBooking } from "../controllers/bookingController.js";
+import {
+  createBooking,
+  getUserBookings,
+  getAllBookings,
+  updateBookingStatus,
+} from "../controllers/bookingController.js";
+
+import { protect, adminOnly } from "../middleware/authMiddleware.js";
+import { uploadBookingReceipt } from "../middleware/uploadMiddleware.js";
 
 const router = express.Router();
 
-// Create a booking
-router.post("/", createBooking);
+// PUBLIC — Create booking (guest or logged-in user)
+router.post("/", uploadBookingReceipt.single("receipt"), createBooking);
 
-// Get all bookings (admin)
-router.get("/", getBookings);
+// USER — Get their own bookings
+router.get("/my-bookings", protect, getUserBookings);
 
-// Get bookings for a specific user
-router.get("/user/:userId", getUserBookings);
+// ADMIN — Get all bookings
+router.get("/", protect, adminOnly, getAllBookings);
 
-// Cancel a booking
-router.delete("/:id", cancelBooking);
+// ADMIN — Update booking status
+router.put("/:id/status", protect, adminOnly, updateBookingStatus);
 
 export default router;
