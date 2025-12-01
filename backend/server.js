@@ -1,10 +1,13 @@
-// backend/server.js
 import express from "express";
-import mongoose from "mongoose";
 import cors from "cors";
-import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
+import dotenv from "dotenv";
+
+// Import DB connection
+import connectDB from "./config/db.js";
+import { errorHandler } from "./middleware/errorMiddleware.js";
+import {seedAdmin} from "./seeder/seed.js";
 
 // Routes
 import userRoutes from "./routes/userRoutes.js";
@@ -15,6 +18,11 @@ import discountRoutes from "./routes/Discount.js"; // Capital D
 import destinationRoutes from "./routes/DestinationRoutes.js";
 
 dotenv.config();
+connectDB(); // connect to MongoDB
+
+// Run seeder safely, not as middleware
+seedAdmin().catch((err) => console.error("Seeder error:", err));
+
 const app = express();
 
 // __dirname fix for ES modules
@@ -35,30 +43,21 @@ app.use("/api/tours", tourRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/hotels", hotelsRoutes);
 app.use("/api/discount", discountRoutes);
+app.use("/api/destinations", destinationRoutes);
 
-// Root
+// Root route
 app.get("/", (req, res) => {
   res.send("Tour & Travel API is running!");
 });
 
-// Global error handler
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Server Error", message: err.message });
+
+
+// 🔹 Error Handler Middleware (keep last)
+app.use(errorHandler);
+
+
+// Server startup
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
-
-// MongoDB connection
-const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/tour-travel-platformm";
-
-mongoose
-  .connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
-    console.log("✅ MongoDB connected successfully");
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-  })
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
-  
-
-app.use("/api/destinations", destinationRoutes);
-

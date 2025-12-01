@@ -1,7 +1,7 @@
 // backend/seedHotels.js
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import Hotel from "./models/Hotel.js";
+import Hotel from "../models/Hotel.js";
 
 dotenv.config();
 
