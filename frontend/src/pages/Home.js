@@ -1,7 +1,10 @@
 // src/components/HeroSection.js
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
+// import { SearchFormSection } from "../components/SearchFromSection";
 
+
+import { Search as SearchIcon, Calendar as CalendarIcon, Compass as CompassIcon } from "lucide-react";
 
 
 
@@ -57,80 +60,98 @@ const HeroSection = ({ language = "en" }) => {
         : "የተሻለውን ጉብኝት ያግኙ"}
     </h1>
 
-    <div
-      className="
-        text-center 
-        flex items-center justify-center
-        py-2 my-5
-        mx-4 sm:mx-[50px] md:mx-[150px] lg:mx-[200px]
-        bg-white/90 backdrop-blur-sm 
-        rounded-3xl shadow-lg 
-        px-4 gap-4 z-30
-      "
-    >
-
-
-
+   <div
+  className="
+    flex items-center justify-center
+    py-3 my-5
+    mx-4 sm:mx-[50px] md:mx-[150px] lg:mx-[200px]
+    bg-white/90 backdrop-blur-sm 
+    rounded-3xl shadow-lg 
+    px-4 
+  "
+>
   {/* WHERE */}
-  <div className="flex flex-col w-1/3">
-    <label className="text-[11px] text-gray-600 font-semibold">
-      {language === "en" ? "Where" : "የሚሄዱበት"}
-    </label>
-    <input
-      type="text"
-      placeholder={language === "en" ? "Destination" : "መድረሻ"}
-      value={destination}
-      onChange={(e) => setDestination(e.target.value)}
-      className="px-3 py-1 rounded-full border border-gray-300 text-sm"
-    />
+  <div className="flex items-center  rounded-full  ">
+    <div className="w-[50px] h-[50px]  bg-[#eb662b0d] rounded-full">
+      
+    </div>
+    <div className="flex flex-col  items-start text-left">
+      <label className="text-[12px] text-gray-800 font-bold s-start px-[10px]">
+        {language === "en" ? "Where" : "የሚሄዱበት"}
+      </label>
+      <input
+        type="text"
+        placeholder={language === "en" ? " searchDestination" : "መድረሻ"}
+        value={destination}
+        onChange={(e) => setDestination(e.target.value)}
+         className="text-[12px] text-gray-600 outline-none bg-transparent border-none h-[18px]"
+
+      />
+    </div>
   </div>
 
   {/* WHEN */}
-  <div className="flex flex-col w-1/3">
-    <label className="text-[11px] text-gray-600 font-semibold">
-      {language === "en" ? "When" : "መቼ"}
-    </label>
-    <input
-      type="date"
-      value={date}
-      onChange={(e) => setDate(e.target.value)}
-      className="px-3 py-1 rounded-full border border-gray-300 text-sm"
-    />
+  <div className="flex items-center gap-3 px-4 h-[60px] rounded-full  transition flex-1 items-start text-left">
+    <div className="w-[50px] h-[50px] flex items-center justify-center bg-[#eb662b0d] rounded-full">
+      
+    </div>
+
+    <div className="flex flex-col items-left">
+      <label className="text-[12px] text-gray-800 font-bold px-[10]">
+        {language === "en" ? "When" : "መቼ"}
+      </label>
+
+      <input
+        type="date"
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
+          className="text-[12px] text-gray-600 outline-none bg-transparent border-none h-[5px]"
+
+      />
+    </div>
   </div>
 
   {/* TOUR TYPE */}
-  <div className="flex flex-col w-1/3">
-    <label className="text-[11px] text-gray-600 font-semibold">
-      {language === "en" ? "Tour Type" : "የጉብኝት አይነት"}
-    </label>
-    <select
-      value={tourType}
-      onChange={(e) => setTourType(e.target.value)}
-      className="px-3 py-1 rounded-full border border-gray-300 text-sm"
-    >
-      <option value="">
-        {language === "en" ? "All Tours" : "ሁሉም ጉብኝቶች"}
-      </option>
-      {tourOptions.map((tour) => (
-        <option key={tour.value} value={tour.value}>
-          {language === "en" ? tour.labelEn : tour.labelAm}
+  <div className="flex items-center gap-3 px-4 h-[60px]  hover:bg-gray-50 transition flex-1">
+    <div className="w-[50px] h-[50px] flex items-center justify-center bg-[#eb662b0d] rounded-full">
+     
+    </div>
+
+    <div className="flex flex-col">
+      <label className="text-[12px] text-gray-800 font-bold">
+        {language === "en" ? "Tour Type" : "የጉብኝት አይነት"}
+      </label>
+
+      <select
+        value={tourType}
+        onChange={(e) => setTourType(e.target.value)}
+        className="text-[12px] text-gray-600 outline-none bg-transparent"
+      >
+        <option value="">
+          {language === "en" ? "All Tours" : "ሁሉም ጉብኝቶች"}
         </option>
-      ))}
-    </select>
+        {tourOptions.map((tour) => (
+          <option key={tour.value} value={tour.value}>
+            {language === "en" ? tour.labelEn : tour.labelAm}
+          </option>
+        ))}
+      </select>
+    </div>
   </div>
 
-  {/* SEARCH BUTTON */}
+  {/* SEARCH BUTTON (50px × 50px) */}
   <button
     onClick={handleSearch}
     className="
-      px-6 py-2 bg-orange-500 text-white 
-      font-semibold rounded-full text-sm
+      w-[50px] h-[50px]
+      bg-[#eb662b] hover:bg-[#d45a24]
+      rounded-full flex items-center justify-center
+      transition text-white
     "
   >
-    {language === "en" ? "Search" : "ፈልግ"}
+   
   </button>
 </div>
-
 
 
 </div>
@@ -404,19 +425,23 @@ const HeroSection = ({ language = "en" }) => {
 </div>
 
 
-
-
-
 {/* Customer Reviews Section */}
-
-<div className="w-full mt-16 mb-20 px-4 py-10 bg-gray-100">
+<div className="w-full mt-24 mb-24 px-4 py-12 bg-gray-50">
   {/* Section Title */}
-  <h2 className="text-3xl font-extrabold text-gray-800 text-center mb-10">
-    What Our Customers Say
+  <h2 className="text-3xl font-extrabold text-gray-800 text-center">
+    Customers Reviews
   </h2>
 
-{/* Reviews Grid */}
+  {/* Banner Image */}
+  <div className="flex justify-center mt-12 mb-12">
+    <img
+      src="http://localhost:5000/uploads/banner40.png"
+      alt="Banner Icon"
+      className="w-40 h-40 rounded-xl  object-contain"
+    />
+  </div>
 
+  {/* Reviews Grid */}
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 max-w-6xl mx-auto">
     {[
       {
@@ -450,7 +475,10 @@ const HeroSection = ({ language = "en" }) => {
           "I had an incredible time! Friendly staff, amazing activities, and unforgettable memories.",
       },
     ].map((customer, idx) => (
-      <div key={idx} className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition">
+      <div
+        key={idx}
+        className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300"
+      >
         <div className="flex items-center gap-4 mb-4">
           <img
             src={`http://localhost:5000/uploads/${customer.img}`}
@@ -458,15 +486,21 @@ const HeroSection = ({ language = "en" }) => {
             className="w-12 h-12 rounded-full object-cover"
           />
           <div>
-            <h3 className="font-bold text-gray-800">{customer.name}</h3>
-            <p className="text-yellow-500">⭐⭐⭐⭐⭐</p>
+            <h3 className="font-semibold text-gray-800">{customer.name}</h3>
+            <p className="text-yellow-500 text-sm">⭐⭐⭐⭐⭐</p>
           </div>
         </div>
-        <p className="text-gray-600 text-sm">{customer.review}</p>
+        <p className="text-gray-600 text-sm leading-relaxed">{customer.review}</p>
       </div>
     ))}
   </div>
 </div>
+
+
+
+
+
+
 
 
 {/* Travel Articles Section */}

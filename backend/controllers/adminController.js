@@ -3,6 +3,7 @@ import Booking from "../models/Booking.js";
 import Payment from "../models/Payment.js";
 import Tour from "../models/Tour.js";
 
+
 // 🧾 Get dashboard stats
 export const getDashboardData = async (req, res) => {
   try {
