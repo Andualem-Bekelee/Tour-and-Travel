@@ -577,15 +577,28 @@ const HeroSection = ({ language = "en" }) => {
     </div>
 
     {/* Optional Image */}
-    <div className="w-full md:w-1/3">
-      <img
-        src="http://localhost:5000/uploads/banner23.png"
-        alt="banner23.png"
-        
-        className="w-full h-48 object-cover rounded-xl"
-      />
-      
-    </div>
+ <div className="relative w-80 h-64 md:w-96">
+  {/* Bottom layer */}
+  <img
+    src="http://localhost:5000/uploads/banner23.png"
+    className="absolute top-6 left-6 w-full h-full object-cover rounded-xl"
+  />
+
+  {/* Second layer */}
+  
+
+  {/* Third layer */}
+  <img
+    src="http://localhost:5000/uploads/banner23.png"
+    className="absolute top-2 left-2 w-full h-full object-cover rounded-xl"
+  />
+
+  {/* Top layer */}
+ 
+</div>
+
+
+
   </div>
 </div>
 {/* Footer Section */}
