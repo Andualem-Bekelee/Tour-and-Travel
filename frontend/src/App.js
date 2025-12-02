@@ -25,6 +25,7 @@ import ContactSection from "./pages/ContactSection";
 import TourDetails from "./pages/TourDetails";
 import TourView from "./pages/TourView";
 import InfoDetail from "./pages/InfoDetail";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -39,6 +40,7 @@ function App() {
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
     alert(language === "en" ? "✅ Logged out!" : "✅ ውጤት እንደገና ተጠፋ!");
   };
 
@@ -52,7 +54,15 @@ function App() {
         <Route path="/" element={<Home language={language} />} />
          <Route path="/home" element={<Home language={language} />} />
         <Route path="/login" element={<Login language={language} setUser={setUser} />} />
-        <Route path="/admin" element={<AdminDashboard onLogout={handleLogout} language={language} />} />
+     <Route
+  path="/admin"
+  element={
+    <ProtectedRoute adminOnly={true}>
+      <AdminDashboard onLogout={handleLogout} language={language}/>
+    </ProtectedRoute>
+  }
+/>
+
 
         {/* Add other routes here */}
         <Route path="/tours" element={<Tours language={language} isAdmin={user?.isAdmin} />} />
