@@ -41,7 +41,12 @@ const DestinationDetails = () => {
     "Entrance fees to all attractions",
     "Professional guide throughout the tour",
     "Transportation between destinations",
+    "Towel",
+    "Tips",
+    "Alchoholic beverages",
   ];
+
+  
   const [includedChecked, setIncludedChecked] = useState(
     Array(includedItems.length).fill(false)
   );
@@ -54,17 +59,17 @@ const DestinationDetails = () => {
   return (
     <div className="pt-24 max-w-6xl mx-auto p-6">
       {/* HEADER UNDER NAVBAR */}
-      <div className="mb-8 bg-gradient-to-r from-orange-400 to-yellow-200 rounded-xl p-6 shadow-lg flex justify-between items-center">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg">
-          Destination Details
+      <div className="mb-8  rounded-xl p-6  flex justify-between items-center">
+        <h1 className="text-[40px] md:text-4x2 font-[700] text-black">
+          Phi Phi Islands Adventure Day Trip With SeaView Lunch by V.Marine Tour
         </h1>
 
         {/* SHARE + WISHLIST BUTTONS */}
         <div className="flex gap-3">
-          <button className="bg-white text-gray-800 px-3 py-1 rounded shadow-md hover:bg-gray-100 flex items-center gap-1">
-            ❤️ Wishlist
+          <button className="bg-white text-gray-800 px-3 py-1 rounded   flex items-center gap-3">
+             Wishlist
           </button>
-          <button className="bg-white text-gray-800 px-3 py-1 rounded shadow-md hover:bg-gray-100 flex items-center gap-1">
+          <button className="bg-white text-gray-800 px-3 py-1  flex items-center gap-1">
             🔗 Share
           </button>
         </div>
@@ -105,25 +110,29 @@ const DestinationDetails = () => {
               <h4 className="text-md font-semibold mb-2">Tour Overview</h4>
               <p className="text-gray-700 text-sm">
                 Explore this amazing destination with guided tours, cultural experiences, and unforgettable sights. Enjoy local cuisine, learn history, and make memories that last a lifetime.
+                  this amazing destination with guided tours, cultural experiences, and unforgettable sights. Enjoy local cuisine, learn history, and make memories that last a lifetime.
               </p>
             </div>
 
             {/* Tour Highlights */}
             <div id="tour-highlights" className="mt-4">
-              <h4 className="text-md font-semibold mb-2">Tour Highlights</h4>
-              <ul className="flex flex-col gap-2">
-                {[
-                  "Visit iconic landmarks",
-                  "Guided city tour",
-                  "Local cuisine tasting",
-                  "Evening entertainment",
-                ].map((highlight, idx) => (
-                  <li key={idx} className="flex items-center gap-2 text-gray-700">
-                    <input type="checkbox" className="accent-green-600" /> {highlight}
-                  </li>
-                ))}
-              </ul>
-            </div>
+  <h4 className="text-md font-semibold mb-2">Tour Highlights</h4>
+  <ul className="flex flex-col gap-2">
+    {[
+      "Visit iconic landmarks",
+      "Guided city tour",
+      "Local cuisine tasting",
+      "Evening entertainment",
+      "Scenic nature walks"
+    ].map((highlight, idx) => (
+      <li key={idx} className="flex items-center gap-2 text-gray-700">
+        <span className="text-xl leading-none">•</span>
+        {highlight}
+      </li>
+    ))}
+  </ul>
+</div>
+
             
 
             {/* What's Included */}
@@ -132,12 +141,14 @@ const DestinationDetails = () => {
               <ul className="flex flex-col gap-2">
                 {includedItems.map((item, idx) => (
                   <li key={idx} className="flex items-center gap-2 text-gray-700">
-                    <input
-                      type="checkbox"
-                      className="accent-blue-600"
-                      checked={includedChecked[idx]}
-                      onChange={() => toggleIncluded(idx)}
-                    />
+   
+                  <span
+                   onClick={() => toggleIncluded(idx)}
+                   className={`w-6 h-6 rounded-full cursor-pointer 
+                   ${includedChecked[idx] ? "bg-blue-600" : "bg-gray-300"}`}
+                   ></span>
+
+
                     <Link
                       to={`/details#${item.toLowerCase().replace(/ /g, "-").replace(/'/g, "")}`}
                       className="hover:underline"
@@ -147,6 +158,8 @@ const DestinationDetails = () => {
                   </li>
                 ))}
               </ul>
+
+              
               {/* ITINERARY */}
 <div id="itinerary" className="mt-6">
   <h4 className="text-md font-semibold mb-2">Itinerary</h4>
@@ -218,9 +231,11 @@ const DestinationDetails = () => {
     />
   </div>
 </div>
+
+
 {/* FAQ Section */}
-<div id="faqs" className="mt-10 bg-white p-6 rounded-xl shadow-md border">
-  <h3 className="text-xl font-bold mb-4">FAQs</h3>
+<div id="faqs" className="mt-10 bg-white p-6 ">
+  <h3 className="text-xl mb-4">FAQs</h3>
 
   <div className="space-y-4">
     {[
@@ -242,8 +257,15 @@ const DestinationDetails = () => {
       }
     ].map((faq, idx) => (
       <div key={idx} className="border-b pb-3">
+        
         <button
-          className="w-full flex justify-between items-center text-left font-semibold text-gray-800"
+          className="w-full flex justify-between items-center text-left
+                     text-black
+                     hover:text-black
+                     focus:text-black
+                     bg-transparent
+                     focus:bg-transparent
+                     active:bg-transparent"
           onClick={() => {
             const el = document.getElementById(`faq-${idx}`);
             el.classList.toggle("hidden");
@@ -260,6 +282,12 @@ const DestinationDetails = () => {
     ))}
   </div>
 </div>
+
+
+
+
+
+
 {/* CUSTOMER REVIEWS */}
 <div id="reviews" className="mt-10 bg-white p-6 rounded-xl shadow-md border">
   <h3 className="text-xl font-bold mb-4">Customer Reviews</h3>

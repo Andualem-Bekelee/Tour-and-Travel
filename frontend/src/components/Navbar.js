@@ -12,7 +12,7 @@ const navItems = [
 { key: "contact", labelEn: "Contact", labelAm: "አግኙን", to: "/contact" },
 ];
 
-return ( <nav className="fixed top-0 w-full z-50 bg-cream"> <div className="max-w-7xl mx-auto px-4 md:px-8 py-[21px] flex items-center gap-6">
+return ( <nav className="fixed top-0 w-full z-50 "> <div className="max-w-7xl mx-auto px-4 md:px-8 py-[21px] flex items-center gap-6">
 {/* LOGO */} <Link to="/" className="text-2xl font-bold text-orange-600"> <img src="http://localhost:5000/uploads/logo1.png" alt="logo" /> </Link>
 
 
@@ -38,10 +38,15 @@ return ( <nav className="fixed top-0 w-full z-50 bg-cream"> <div className="max-
       </ul>
 
       <ul className="flex items-center gap-6">
-        <li>USD</li>
+        <li>
+          
+        </li>
 
         {!user && (
           <>
+          <NavLink to="/usd" className="font-medium text-gray-700 hover:text-blue-600">
+                {language === "en" ? "USD" : "ግባ"}
+              </NavLink>
             <li>
               <NavLink to="/signup" className="font-medium text-gray-700 hover:text-blue-600">
                 {language === "en" ? "Sign Up" : "ይመዝገቡ"}
