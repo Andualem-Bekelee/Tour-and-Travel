@@ -16,7 +16,7 @@ import ResetPassword from "./pages/ResetPassword";
 import AddTour from "./pages/AddTour";
 import AddHotel from "./pages/AddHotel";
 import BookHotels from "./pages/BookHotels";
-import AdminDiscount from "./pages/AdminDiscount";
+
 import Destination from "./pages/Destination";
 import DestinationDetails from "./pages/DestinationDetails";
 import DestinationPage from "./pages/DestinationHome";
@@ -26,6 +26,8 @@ import TourDetails from "./pages/TourDetails";
 import TourView from "./pages/TourView";
 import InfoDetail from "./pages/InfoDetail";
 import ProtectedRoute from "./components/ProtectedRoute";
+import EditTour from "./pages/EditTour";
+
 
 // Components
 import Navbar from "./components/Navbar";
@@ -72,7 +74,7 @@ function App() {
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/addtour" element={<AddTour language={language} />} />
         <Route path="/addhotel" element={<AddHotel language={language} />} />
-        <Route path="/admin/discount" element={<AdminDiscount />} />
+      
         <Route path="/bookhotels" element={<BookHotels language={language} />} />
         <Route path="/destination" element={<Destination language={language} />} />
         <Route path="/destination-details" element={<DestinationDetails />} />
@@ -83,6 +85,8 @@ function App() {
         <Route path="/details" element={<InfoDetail />} />
         <Route path="/tour/:id" element={<TourDetails />} />
         <Route path="/tourview/:id" element={<TourView />} />
+        <Route path="/admin/edit-tour" element={<EditTour />} />
+
       </Routes>
     </Router>
   );

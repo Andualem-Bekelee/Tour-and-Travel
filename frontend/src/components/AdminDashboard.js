@@ -23,7 +23,7 @@ fetchUsers();
 
 const fetchTours = async () => {
 try {
-const res = await axios.get("[http://localhost:5000/api/tours](http://localhost:5000/api/tours)", config);
+const res = await axios.get(`[${API_URL}/tours](${API_URL}/tours)`, config);
 setTours(res.data);
 } catch (err) {
 console.error(err);
@@ -32,7 +32,7 @@ console.error(err);
 
 const fetchBookings = async () => {
 try {
-const res = await axios.get("[http://localhost:5000/api/bookings](http://localhost:5000/api/bookings)", config);
+const res = await axios.get(`${API_URL}bookings](${API_URL}/bookings)`, config);
 console.log("Fetched bookings:", res.data);
 setBookings(res.data);
 } catch (err) {
@@ -42,7 +42,7 @@ console.error(err);
 
 const fetchUsers = async () => {
 try {
-const res = await axios.get("[http://localhost:5000/api/users](http://localhost:5000/api/users)", config);
+const res = await axios.get(`${API_URL}users](${API_URL}users)`, config);
 setUsers(res.data);
 } catch (err) {
 console.error(err);
@@ -52,7 +52,7 @@ console.error(err);
 const handleDeleteTour = async (id) => {
 if (!window.confirm("Are you sure you want to delete this tour?")) return;
 try {
-await axios.delete(`http://localhost:5000/api/tours/${id}`, config);
+await axios.delete(`${API_URL}tours/${id}`, config);
 alert("✅ Tour deleted!");
 fetchTours();
 } catch (err) {
@@ -144,7 +144,7 @@ return (
             <p style={{ fontWeight: "bold" }}>Price: ${tour.price}</p>
             <div style={{ display: "flex", gap: 5, overflowX: "auto" }}>
               {tour.images?.length > 0 ? tour.images.map((img, idx) => (
-                <img key={idx} src={`http://localhost:5000${img}`} alt={tour.title} style={{ width: 80, height: 80, objectFit: "cover", borderRadius: 6 }} />
+                <img key={idx} src={`${API_URL}${img}`} alt={tour.title} style={{ width: 80, height: 80, objectFit: "cover", borderRadius: 6 }} />
               )) : <img src="https://via.placeholder.com/80x80" alt={tour.title} style={{ width: 80, height: 80, objectFit: "cover", borderRadius: 6 }} />}
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10 }}>

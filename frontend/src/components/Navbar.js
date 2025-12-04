@@ -26,7 +26,7 @@ return ( <nav className="fixed top-0 w-full z-50 "> <div className="max-w-7xl mx
               className={({ isActive }) =>
                 `font-medium transition ${
                   isActive
-                    ? "text-blue-600 font-bold underline underline-offset-4"
+                    ? "text-orange-600 font-bold underline underline-offset-4"
                     : "text-gray-700 hover:text-blue-600"
                 }`
               }
@@ -87,14 +87,14 @@ return ( <nav className="fixed top-0 w-full z-50 "> <div className="max-w-7xl mx
           </>
         )}
 
-        <li>
+       { /*<li>
           <button
             onClick={() => setLanguage(language === "en" ? "am" : "en")}
             className="font-medium text-gray-700"
           >
             {language === "en" ? "AM" : "EN"}
           </button>
-        </li>
+        </li>*/}
       </ul>
     </div>
 

@@ -9,7 +9,7 @@ const ContactSection = ({ language = "en" }) => {
     // Try to fetch dynamic contact; if 404 or error, fallback to defaults
     const fetchContact = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/contact");
+        const res = await fetch(`${API_URL}contact`);
         if (!res.ok) throw new Error("No contact API");
         const data = await res.json();
         setContact(data);

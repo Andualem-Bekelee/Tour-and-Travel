@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 
 const Activities = ({ language }) => {
-  const backendUrl = "http://localhost:5000"; // Backend URL for images
+  const backendUrl = `${process.env.API_URL}`; // Backend URL for images
   const [activities, setActivities] = useState([]);
 
   useEffect(() => {

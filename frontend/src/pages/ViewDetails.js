@@ -33,6 +33,8 @@ const ViewDetailsPage = () => {
       <p className="text-gray-700 mb-4">
         This is the full details page for <strong>{tour.title}</strong>.
         You can add a full description, highlights, itinerary, schedule, reviews, or any other info here.
+        
+
       </p>
 
       {/* Prices */}

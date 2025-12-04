@@ -13,7 +13,7 @@ function ReviewForm({ tourId, onReviewAdded }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`http://localhost:5000/api/reviews`, {
+      await axios.post(`${API_URL}reviews`, {
         tourId,
         ...review,
       });

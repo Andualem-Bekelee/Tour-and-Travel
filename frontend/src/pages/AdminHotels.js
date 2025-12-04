@@ -12,7 +12,7 @@ export default function AdminHotels() {
   }, []);
 
   const fetchHotels = async () => {
-    const res = await axios.get("http://localhost:5000/api/hotels");
+    const res = await axios.get(`${API_URL}hotels`);
     setHotels(res.data);
   };
 

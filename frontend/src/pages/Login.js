@@ -3,8 +3,8 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
 // CRA environment variable
-const API_URL = process.env.REACT_APP_API_URL;
-
+const API_URL = "http://192.168.228.220:5000/api";
+console.log("API_URL:", API_URL);
 const Login = ({ onLogin }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");

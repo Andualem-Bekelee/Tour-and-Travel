@@ -13,7 +13,7 @@ const TourCard = ({ tour }) => {
 
   const imageUrl = firstImage.startsWith("http")
     ? firstImage
-    : `http://localhost:5000/uploads/${firstImage}`;
+    : `${API_URL}uploads/${firstImage}`;
 
   return (
     <div className="tour-card border p-4 rounded shadow hover:shadow-lg transition">

@@ -26,7 +26,7 @@ const CreateAccount = () => {
 
     try {
       // 👇 Example: Replace with your actual backend signup API endpoint
-      await axios.post("http://localhost:5000/api/users/register", formData);
+      await axios.post(`${process.env.API_URL}users/register`, formData);
       setMessage("✅ Account created successfully!");
       setFormData({ name: "", email: "", password: "", confirmPassword: "" });
     } catch (error) {

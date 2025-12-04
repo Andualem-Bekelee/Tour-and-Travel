@@ -1,28 +1,68 @@
 // src/components/HeroSection.js
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-// import { SearchFormSection } from "../components/SearchFromSection";
+import {
+  Search as SearchIcon,
+  Calendar as CalendarIcon,
+  Compass as CompassIcon,
+} from "lucide-react";
 
+const REACT_APP_BACKEND_URL = "http://192.168.158.220:5000/api";
 
-import { Search as SearchIcon, Calendar as CalendarIcon, Compass as CompassIcon } from "lucide-react";
-
-
-
-
-
-
-
-
+// tourOptions stays here — OK
 const tourOptions = [
   { value: "adventure", labelEn: "Adventure", labelAm: "አድቨንቸር" },
   { value: "cultural", labelEn: "Cultural", labelAm: "ባህላዊ" },
   { value: "nature", labelEn: "Nature", labelAm: "ተፈጥሮ" },
 ];
 
+// ❗ Your components start here
 const HeroSection = ({ language = "en" }) => {
-  const [destination, setDestination] = useState("");
+  
+const [destination, setDestination] = useState("");
+  const [results, setResults] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
   const [date, setDate] = useState("");
   const [tourType, setTourType] = useState("");
+  const [featuredTrips, setFeaturedTrips] = useState([]);
+ useEffect(() => {
+    const fetchFeatured = async () => {
+      try {
+        const res = await fetch(`${REACT_APP_BACKEND_URL}/tours`);
+        const data = await res.json();
+        setFeaturedTrips(data);
+      } catch (err) {
+        console.error("Featured trips error:", err);
+      }
+    };
+
+    fetchFeatured();
+  }, []);
+
+  // ✅ SEARCH DESTINATION — CLEAN DEBOUNCE
+  useEffect(() => {
+    if (destination.length < 2) {
+      setResults([]);
+      setShowDropdown(false);
+      return;
+    }
+
+    const debounce = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `${REACT_APP_BACKEND_URL}/tours/search?query=${destination}`
+        );
+        const data = await res.json();
+        setResults(data);
+        setShowDropdown(true);
+      } catch (err) {
+        console.error("Search error:", err);
+      }
+    }, 400);
+
+    return () => clearTimeout(debounce);
+  }, [destination]);
 
   const handleSearch = () => {
     console.log({ destination, date, tourType });
@@ -38,7 +78,7 @@ const HeroSection = ({ language = "en" }) => {
       bg-center bg-cover relative
     "
     style={{
-      backgroundImage: "url('http://localhost:5000/uploads/banner4.png')",
+      backgroundImage: "url('http://192.168.158.220:5000/uploads/tours/1764849510224-image6.jpg')",
     }}
   >
     {/* <Navbar /> */}
@@ -69,26 +109,45 @@ const HeroSection = ({ language = "en" }) => {
     rounded-3xl shadow-lg 
     px-4 
   "
->
-  {/* WHERE */}
-  <div className="flex items-center  rounded-full  ">
-    <div className="w-[50px] h-[50px]  bg-[#eb662b0d] rounded-full">
-      
-    </div>
-    <div className="flex flex-col  items-start text-left">
-      <label className="text-[12px] text-gray-800 font-bold s-start px-[10px]">
+>{/* WHERE */}
+<div className="relative">  
+  <div className="flex items-center rounded-full">
+    <div className="w-[50px] h-[50px] bg-[#eb662b0d] rounded-full"></div>
+
+    <div className="flex flex-col items-start text-left">
+      <label className="text-[12px] text-gray-800 font-bold px-[10px]">
         {language === "en" ? "Where" : "የሚሄዱበት"}
       </label>
-      <input
-        type="text"
-        placeholder={language === "en" ? " searchDestination" : "መድረሻ"}
-        value={destination}
-        onChange={(e) => setDestination(e.target.value)}
-         className="text-[12px] text-gray-600 outline-none bg-transparent border-none h-[18px]"
 
-      />
+    <input
+                  type="text"
+                  placeholder={language === "en" ? "Search destination" : "መድረሻ ፈልግ"}
+                  value={destination}
+                  onChange={(e) => setDestination(e.target.value)}
+                  className="text-[12px] text-gray-600 outline-none bg-transparent px-[10px]"
+                />
     </div>
   </div>
+
+  {/* Dropdown Results */}
+  {showDropdown && results.length > 0 && (
+    <div className="absolute mt-2 w-full bg-white shadow-lg rounded-md z-10">
+      {results.map((item) => (
+                  <div
+                    key={item._id}
+                    className="p-2 hover:bg-gray-100 cursor-pointer text-sm"
+                    onClick={() => {
+                      setDestination(item?.destination?.city || item.title);
+                      setShowDropdown(false);
+                    }}
+        >
+        {item?.destination?.city || item.title}
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
 
   {/* WHEN */}
   <div className="flex items-center gap-3 px-4 h-[60px] rounded-full  transition flex-1 items-start text-left">
@@ -215,7 +274,7 @@ const HeroSection = ({ language = "en" }) => {
       {/* Top Image */}
       <a href="#" className="relative">
         <img
-          src="http://localhost:5000/uploads/banner7.png"
+          src="http://192.168.158.220:5000/uploads/tours/1764849510224-image6.jpg"
           alt="Banner7"
           className="w-[520px] h-[240px] object-cover rounded-xl"
         />
@@ -228,7 +287,7 @@ const HeroSection = ({ language = "en" }) => {
       <div className="grid grid-cols-2 gap-[30px] justify-items-center">
         <a href="#" className="relative">
           <img
-            src="http://localhost:5000/uploads/banner8.png"
+            src="http://192.168.228.220:5000/uploads/tours/1764849510224-image6.jpg"
             alt="Banner8"
             className="w-[190px] h-[240px] object-cover rounded-xl"
           />
@@ -239,7 +298,7 @@ const HeroSection = ({ language = "en" }) => {
 
         <a href="#" className="relative">
           <img
-            src="http://localhost:5000/uploads/banner9.png"
+            src="http://localhost:5000/uploads/tours/1764849510224-image6.jpg banner5.png"
             alt="Banner9"
             className="w-[300px] h-[240px] object-cover rounded-xl"
           />
@@ -355,36 +414,36 @@ const HeroSection = ({ language = "en" }) => {
 
 
 {/* Equal Rectangle Image Grid */}
+{/* Equal Rectangle Image Grid (Dynamic) */}
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-  {[
-    { id: 11, name: "Sunny Beach Escape", discount: 10 },
-    { id: 12, name: "Mountain Adventure", discount: 15 },
-    { id: 13, name: "City Lights Tour", discount: 20 },
-    { id: 14, name: "Jungle Safari", discount: 5 },
-    { id: 15, name: "Desert Trekking", discount: 0 },
-    { id: 16, name: "Island Hopping", discount: 12 },
-    { id: 17, name: "Historic Sites", discount: 8 },
-    { id: 18, name: "Bale Mountain (from250$) ", discount: 18 },
-  ].map((trip) => (
-    <div key={trip.id} className="w-full group">
+  {featuredTrips.map((trip) => (
+    <div key={trip._id} className="w-full group">
+      
+      {/* Image */}
       <img
-        src={`http://localhost:5000/uploads/banner${trip.id}.png`}
-        alt={trip.name}
+        src={`http://192.168.228.220:5000/${trip.imageSrc || "uploads/default.jpg"}`}
+        alt={trip.title}
         className="w-full h-48 object-cover rounded-xl hover:scale-105 transition-transform duration-300"
       />
 
-      {/* Info below image */}
+      {/* Info Below */}
       <div className="mt-2 flex justify-between items-center text-sm font-semibold">
-        <span className="text-gray-800">{trip.name}</span>
-        {trip.discount > 0 && (
-          <span className="bg-black-500 text-black px-2 py-0.5 rounded font-bold">
-            {trip.discount}% OFF
+        <span className="text-gray-800">
+          {trip.title || trip.destination?.city & trip.destination?.country}
+        </span>
+
+        {trip.price && trip.price > 0 ? (
+          <span className="bg-black text-white px-2 py-0.5 rounded font-bold">
+            {trip.price}
           </span>
+        ) : (
+          <span className="text-gray-400 text-xs">No price</span>
         )}
       </div>
     </div>
   ))}
 </div>
+
 
 
   </div>
@@ -406,19 +465,38 @@ const HeroSection = ({ language = "en" }) => {
       </a>
     </div>
 
+<div className="max-w-6xl mx-auto px-4 py-10">
+  {/* Image Grid */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    {[
+      { num: 5, title: "City Tour 100+tours" },
+      { num: 6, title: "Mountain Hike 100+tours" },
+      { num: 7, title: "River Rafting 100+tours" },
+      { num: 8, title: "Village Visit 100+tours" },
+    ].map((item) => (
+      <div key={item.num} className="w-full relative rounded-xl overflow-hidden">
+        {/* Image */}
+        <img
+          src={`http://localhost:5000/uploads/banner${item.num}.png`}
+          alt={item.title}
+          className="w-full h-60 object-cover rounded-xl"
+        />
 
-{/* Image Grid */}
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-  {[5, 6, 7, 8].map((num) => (
-    <div key={num} className="w-full relative group">
-      <img
-        src={`http://localhost:5000/uploads/banner${num}.png`}
-        alt={`Banner${num}`}
-        className="w-full h-60 object-cover rounded-xl hover:scale-105 transition-transform duration-300 "
-      />
-    </div>
-  ))}
+        {/* Clickable title */}
+        <a
+          href="/destination" // link directly to Tours page
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white px-3 py-1 rounded-md font-semibold text-sm cursor-pointer"
+        >
+          {item.title}
+        </a>
+      </div>
+    ))}
+  </div>
 </div>
+
+
+
+
 
 
   </div>
@@ -435,7 +513,7 @@ const HeroSection = ({ language = "en" }) => {
   {/* Banner Image */}
   <div className="flex justify-center mt-12 mb-12">
     <img
-      src="http://localhost:5000/uploads/banner40.png"
+      src="http://192.168.228.220:5000/uploads/tours/1764849510224-image6.jpg"
       alt="Banner Icon"
       className="w-40 h-40 rounded-xl  object-contain"
     />
@@ -487,7 +565,7 @@ const HeroSection = ({ language = "en" }) => {
           />
           <div>
             <h3 className="font-semibold text-gray-800">{customer.name}</h3>
-            <p className="text-yellow-500 text-sm">⭐⭐⭐⭐⭐</p>
+            <p className="text-yellow-500 text-sm"></p>
           </div>
         </div>
         <p className="text-gray-600 text-sm leading-relaxed">{customer.review}</p>
@@ -580,7 +658,9 @@ const HeroSection = ({ language = "en" }) => {
  <div className="relative w-80 h-64 md:w-96">
   {/* Bottom layer */}
   <img
-    src="http://localhost:5000/uploads/banner23.png"
+    src="http://192.168.228.220:5000/uploads/tours/1764849510224-image6.jpg
+    
+    "
     className="absolute top-6 left-6 w-full h-full object-cover rounded-xl"
   />
 

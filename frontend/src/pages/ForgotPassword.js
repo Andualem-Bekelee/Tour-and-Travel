@@ -13,7 +13,7 @@ export default function ForgotPassword() {
     setResetLink("");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/users/forgot-password", { email });
+      const res = await axios.post(`${process.env.API_URL}/users/forgot-password`, { email });
       setMessage(res.data.message);
       setResetLink(res.data.resetLink); // store reset link
     } catch (err) {

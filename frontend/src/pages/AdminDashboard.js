@@ -19,7 +19,7 @@ function AdminDashboard({ language }) {
 
   const fetchTours = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/tours");
+      const res = await axios.get(`${process.env.API_URL}tours`);
       setTours(res.data);
     } catch (err) {
       console.error("Error fetching tours:", err);
@@ -28,7 +28,7 @@ function AdminDashboard({ language }) {
 
   const fetchHotels = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/hotels");
+      const res = await axios.get(`${process.env.API_URL}hotels`);
       setHotels(res.data);
     } catch (err) {
       console.error("Error fetching hotels:", err);
@@ -37,7 +37,7 @@ function AdminDashboard({ language }) {
 
   const fetchBookings = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/bookings");
+      const res = await axios.get(`${process.env.API_URL}/bookings`);
       setBookings(res.data);
     } catch (err) {
       console.error("Error fetching bookings:", err);
@@ -46,7 +46,7 @@ function AdminDashboard({ language }) {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/users");
+      const res = await axios.get(`${process.env.API_URL}/users`);
       setUsers(res.data);
     } catch (err) {
       console.error("Error fetching users:", err);
@@ -56,7 +56,7 @@ function AdminDashboard({ language }) {
   const handleDeleteTour = async (id) => {
     if (!window.confirm("Are you sure you want to delete this tour?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/tours/${id}`);
+      await axios.delete(`${process.env.API_URL}tours/${id}`);
       alert("✅ Tour deleted successfully!");
       fetchTours();
     } catch (err) {
@@ -68,7 +68,7 @@ function AdminDashboard({ language }) {
   const handleDeleteHotel = async (id) => {
     if (!window.confirm("Are you sure you want to delete this hotel?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/hotels/${id}`);
+      await axios.delete(`${process.env.API_URL}hotels/${id}`);
       alert("✅ Hotel deleted successfully!");
       fetchHotels();
     } catch (err) {

@@ -8,7 +8,7 @@ function AdminDiscount() {
   useEffect(() => {
     const fetchDiscount = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/discount");
+        const res = await axios.get(`${API_URL}discount`);
         if (res.data) {
           setDiscount(res.data.value);
           setDiscountId(res.data._id);
@@ -23,7 +23,7 @@ function AdminDiscount() {
   const handleUpdate = async () => {
     if (!discountId) return alert("No discount record found to update.");
     try {
-      await axios.put(`http://localhost:5000/api/discount/${discountId}`, { value: discount });
+      await axios.put(`${API_URL}discount/${discountId}`, { value: discount });
       alert("Discount updated!");
     } catch (err) {
       alert("Failed to update discount.");
